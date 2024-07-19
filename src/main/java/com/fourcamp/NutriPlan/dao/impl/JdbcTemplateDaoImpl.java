@@ -44,6 +44,11 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         jdbcTemplate.update(callProcedure, email, novoPeso);
     }
 
+    public void formularioObjetivo(String email, String categoria, String tempoMeta) {
+        String callProcedure = "CALL formulario_objetivo(?, ?, ?)";
+        jdbcTemplate.update(callProcedure,email,categoria,tempoMeta);
+    }
+
 //    public double viewSaldo(String email) {
 //
 //    }

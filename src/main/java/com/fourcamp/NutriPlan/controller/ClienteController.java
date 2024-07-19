@@ -1,5 +1,6 @@
 package com.fourcamp.NutriPlan.controller;
 
+import com.fourcamp.NutriPlan.dto.ClienteDto;
 import com.fourcamp.NutriPlan.dto.JwtData;
 import com.fourcamp.NutriPlan.dto.LoginRequestDto;
 import com.fourcamp.NutriPlan.dto.PesoDto;
@@ -71,6 +72,14 @@ public class ClienteController {
         JwtData jwtData = JwtUtils.decodeToken(token);
 
         String mensagem = clienteService.alterarPeso(jwtData.getEmail(), novoPeso.getNovoPeso());
+        return ResponseEntity.ok(mensagem);
+    }
+
+    @PostMapping("/formulario")
+    public ResponseEntity<String> formularioObjetivo(@RequestHeader("Authorization") String token, @RequestBody ClienteDto cliente){
+        JwtData jwtData = JwtUtils.decodeToken(token);
+
+        String mensagem = clienteService.formularioObjetivo(jwtData.getEmail(), cliente.getCategoria(), cliente.getTempoMeta());
         return ResponseEntity.ok(mensagem);
     }
 

@@ -50,6 +50,15 @@ public class ClienteService {
         return "Peso alterado com sucesso";
     }
 
+    public String formularioObjetivo(String email, String categoria, String tempoMeta) {
+        Cliente cliente = jdbcTemplateDaoImpl.buscarClientePorEmail(email);
+
+        cliente.setCategoria(categoria);
+        cliente.setTempoMeta(tempoMeta);
+        jdbcTemplateDaoImpl.formularioObjetivo(email,categoria,tempoMeta);
+        return "Parabéns, Você está mais proximo do seu objetivo";
+    }
+
 //    public double visualizarGeb(String email) {
 //        return jdbcTemplateDaoImpl.viewSaldo(email);
 //    }
