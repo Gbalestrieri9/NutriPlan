@@ -33,7 +33,9 @@ public class ClienteController {
                 cliente.getPesoDesejado(),
                 cliente.getAltura(),
                 dataSql,
-                cliente.getSenha()
+                cliente.getSenha(),
+                cliente.getCategoria(),
+                cliente.getTempoMeta()
         );
 
         return ResponseEntity.ok().body(mensagem);
@@ -64,7 +66,7 @@ public class ClienteController {
 //        return ResponseEntity.ok(saldo);
 //    }
 
-    @PostMapping("/atualizarPeso")
+    @PostMapping("/atualizar-peso")
     public ResponseEntity<String> alterarPeso(@RequestHeader("Authorization") String token, @RequestBody PesoDto novoPeso){
         JwtData jwtData = JwtUtils.decodeToken(token);
 

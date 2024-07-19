@@ -18,8 +18,8 @@ public class ClienteRepository {
         connection = DriverManager.getConnection(url, user, password);
     }
 
-    public void criarCliente(String nome, String email, String genero, Double peso, Double pesoDesejado,Double altura, Date dataNascimento, String senha) throws SQLException {
-        String sql = "{call criar_cliente(?, ?, ?, ?, ?, ?, ?, ?)}";
+    public void criarCliente(String nome, String email, String genero, Double peso, Double pesoDesejado,Double altura, Date dataNascimento, String senha, String categoria, String tempo_meta) throws SQLException {
+        String sql = "{call criar_cliente(?, ?, ?, ?, ?, ?, ?, ? , ? , ?)}";
         try (CallableStatement statement = connection.prepareCall(sql)) {
             statement.setString(1, nome);
             statement.setString(2, email);
@@ -29,6 +29,8 @@ public class ClienteRepository {
             statement.setDouble(6,altura);
             statement.setDate(7, new java.sql.Date(dataNascimento.getTime()));
             statement.setString(8, senha);
+            statement.setString(9,categoria);
+            statement.setString(10,tempo_meta);
             statement.execute();
         }
     }

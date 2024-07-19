@@ -17,8 +17,8 @@ public class ClienteService {
     @Autowired
     private JdbcTemplateDaoImpl jdbcTemplateDaoImpl;
 
-    public String criarCliente(String nome, String email, String genero, Double peso, Double pesoDesejado, Double altura, Date dataNascimento, String senha){
-        jdbcTemplateDaoImpl.criarCliente(nome, email, genero, peso, pesoDesejado, altura, dataNascimento, senha);
+    public String criarCliente(String nome, String email, String genero, Double peso, Double pesoDesejado, Double altura, Date dataNascimento, String senha, String categoria, String tempoMeta){
+        jdbcTemplateDaoImpl.criarCliente(nome, email, genero, peso, pesoDesejado, altura, dataNascimento, senha, categoria , tempoMeta);
         return Constantes.MSG_CRIACAO_CLIENTE_SUCESSO;
     }
 
@@ -33,10 +33,11 @@ public class ClienteService {
                     .claim("peso", cliente.getPeso()).claim("peso_desejado", cliente.getPesoDesejado())
                     .claim("altura",cliente.getAltura())
                     .claim("data_nascimento", cliente.getDataNascimento()).claim("senha", cliente.getSenha())
+                    .claim("categoria", cliente.getCategoria()) .claim("tempo_meta", cliente.getTempoMeta())
 
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000)).signWith(chaveSecreta).compact();
             return token;
-        } else {
+        } else { 
             return null;
         }
     }

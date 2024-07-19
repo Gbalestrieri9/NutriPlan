@@ -27,8 +27,10 @@ public class JwtUtils {
             jwtData.setPeso(claims.get("peso", Double.class));
             jwtData.setPesoDesejado(claims.get("peso_desejado", Double.class));
             jwtData.setAltura(claims.get("altura", Double.class));
-            //jwtData.setDataNascimento(claims.get("data_nascimento"Date.from()));
+            jwtData.setDataNascimento(claims.get("data_nascimento" , Date.class));
             jwtData.setSenha(claims.get("senha",String.class));
+            jwtData.setCategoria(claims.get("categoria", String.class));
+            jwtData.setTempoMeta(claims.get("tempo_meta",String.class));
 
             return jwtData;
 

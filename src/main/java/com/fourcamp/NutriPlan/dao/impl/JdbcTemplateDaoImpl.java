@@ -16,10 +16,10 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void criarCliente(String nome, String email, String genero, double peso, double pesoDesejado, double altura, Date dataNascimento, String senha) {
-        String sql = "CALL criar_cliente(?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] params = {nome, email, genero, peso, pesoDesejado, altura, new java.sql.Date(dataNascimento.getTime()), senha};
-        int[] types = {Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.NUMERIC, Types.NUMERIC, Types.NUMERIC, Types.DATE, Types.VARCHAR};
+    public void criarCliente(String nome, String email, String genero, double peso, double pesoDesejado, double altura, Date dataNascimento, String senha, String categoria, String tempoMeta) {
+        String sql = "CALL criar_cliente(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] params = {nome, email, genero, peso, pesoDesejado, altura, new java.sql.Date(dataNascimento.getTime()), senha, categoria , tempoMeta};
+        int[] types = {Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.NUMERIC, Types.NUMERIC, Types.NUMERIC, Types.DATE, Types.VARCHAR , Types.NULL, Types.NULL};
 
         jdbcTemplate.update(sql, params, types);
     }
@@ -29,7 +29,7 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         @SuppressWarnings("deprecation")
         List<Cliente> clientes = jdbcTemplate.query(query, new Object[] { email }, (rs, rowNum) -> {
             return new Cliente(rs.getString("nome"), rs.getString("email"), rs.getString("genero"), rs.getDouble("peso"),
-                    rs.getDouble("peso_desejado"),rs.getDouble("altura"), rs.getDate("data_nascimento"), rs.getString("senha"));
+                    rs.getDouble("peso_desejado"),rs.getDouble("altura"), rs.getDate("data_nascimento"), rs.getString("senha"), rs.getString("categoria"), rs.getString("tempo_meta"));
         });
 
         if (!clientes.isEmpty()) {

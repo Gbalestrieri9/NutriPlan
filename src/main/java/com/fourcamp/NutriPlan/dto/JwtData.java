@@ -14,5 +14,6 @@ public class JwtData {
     private Double altura;
     private Date dataNascimento;
     private String senha;
-
+    private String categoria;
+    private String tempoMeta;
 }
