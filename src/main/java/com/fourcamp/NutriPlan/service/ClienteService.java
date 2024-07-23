@@ -58,8 +58,4 @@ public class ClienteService {
         jdbcTemplateDaoImpl.formularioObjetivo(email,categoria,tempoMeta);
         return "Parabéns, Você está mais proximo do seu objetivo";
     }
-
-//    public double visualizarGeb(String email) {
-//        return jdbcTemplateDaoImpl.viewSaldo(email);
-//    }
 }

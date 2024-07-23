@@ -6,6 +6,7 @@ import com.fourcamp.NutriPlan.dto.LoginRequestDto;
 import com.fourcamp.NutriPlan.dto.PesoDto;
 import com.fourcamp.NutriPlan.model.Cliente;
 import com.fourcamp.NutriPlan.service.ClienteService;
+import com.fourcamp.NutriPlan.service.ObjetivoService;
 import com.fourcamp.NutriPlan.utils.Constantes;
 import com.fourcamp.NutriPlan.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private ObjetivoService objetivoService;
 
     @PostMapping("/create/account")
     public ResponseEntity<String> addCliente(@RequestBody Cliente cliente) {
@@ -59,13 +63,29 @@ public class ClienteController {
 //            @ApiResponse (responseCode = "200", description = "Retorno do Geb"),
 //            @ApiResponse (responseCode = "400", description = "Falha no retorno do Geb")
 //    })
-//    public ResponseEntity<Double> visualizarGeb(@RequestHeader("Authorization") String token) {
+//    public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token) {
 //        JwtData jwtData = JwtUtils.decodeToken(token);
 //
-//        double saldo = clienteService.visualizarGeb(jwtData.getEmail());
+//        double saldo = objetivoService.calcularTaxaMetabolica(jwtData.getEmail())
 //
 //        return ResponseEntity.ok(saldo);
 //    }
+
+    @GetMapping("/tmb")
+    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorno do TMB"),
+            @ApiResponse(responseCode = "400", description = "Falha no retorno do TMB")
+    })
+    public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token) {
+        try {
+            JwtData jwtData = JwtUtils.decodeToken(token);
+            double tmb = objetivoService.calcularETMSalvar(jwtData);
+            return ResponseEntity.ok(tmb);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     @PostMapping("/atualizar-peso")
     public ResponseEntity<String> alterarPeso(@RequestHeader("Authorization") String token, @RequestBody PesoDto novoPeso){

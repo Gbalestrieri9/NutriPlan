@@ -2,6 +2,7 @@ package com.fourcamp.NutriPlan.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data

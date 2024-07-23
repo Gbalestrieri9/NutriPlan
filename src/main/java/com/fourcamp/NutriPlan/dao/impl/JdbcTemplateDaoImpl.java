@@ -1,6 +1,7 @@
 package com.fourcamp.NutriPlan.dao.impl;
 
 import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
+import com.fourcamp.NutriPlan.dto.ClienteDto;
 import com.fourcamp.NutriPlan.model.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Types;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
@@ -49,7 +51,19 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         jdbcTemplate.update(callProcedure,email,categoria,tempoMeta);
     }
 
-//    public double viewSaldo(String email) {
+//    public double visualizarTBM(String email) {
+//
+//        String callProcedure = "CALL "
 //
 //    }
+
+    public Map<String, Object> buscarDadosCliente(String email) {
+        String sql = "SELECT peso, altura, genero, data_nascimento FROM clientes WHERE email = ?";
+        return jdbcTemplate.queryForMap(sql, new Object[]{email});
+    }
+
+    public void salvarTMB(String email, double tmb) {
+        String sql = "CALL salvar_tmb(?, ?)";
+        jdbcTemplate.update(sql, email, tmb);
+    }
 }
