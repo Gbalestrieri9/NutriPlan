@@ -3,6 +3,7 @@ package com.fourcamp.NutriPlan.dao.impl;
 import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
 import com.fourcamp.NutriPlan.dto.ClienteDto;
 import com.fourcamp.NutriPlan.model.Cliente;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
@@ -51,19 +53,15 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         jdbcTemplate.update(callProcedure,email,categoria,tempoMeta);
     }
 
-//    public double visualizarTBM(String email) {
-//
-//        String callProcedure = "CALL "
-//
-//    }
-
     public Map<String, Object> buscarDadosCliente(String email) {
-        String sql = "SELECT peso, altura, genero, data_nascimento FROM clientes WHERE email = ?";
+        String sql = "SELECT id, peso, altura, genero, data_nascimento FROM clientes WHERE email = ?";
         return jdbcTemplate.queryForMap(sql, new Object[]{email});
     }
 
-    public void salvarTMB(String email, double tmb) {
-        String sql = "CALL salvar_tmb(?, ?)";
-        jdbcTemplate.update(sql, email, tmb);
+    public void salvarTMBGET(String email, double tmb, double get) {
+        String sql = "CALL salvar_tmb_get(?, ?, ?)";
+        Map<String, Object> cliente = buscarDadosCliente(email);
+        Integer clienteId = (Integer) cliente.get("id");
+        jdbcTemplate.update(sql, clienteId, tmb, get);
     }
 }

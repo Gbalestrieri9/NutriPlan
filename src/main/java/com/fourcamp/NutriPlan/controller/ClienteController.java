@@ -4,6 +4,7 @@ import com.fourcamp.NutriPlan.dto.ClienteDto;
 import com.fourcamp.NutriPlan.dto.JwtData;
 import com.fourcamp.NutriPlan.dto.LoginRequestDto;
 import com.fourcamp.NutriPlan.dto.PesoDto;
+import com.fourcamp.NutriPlan.model.CategoriaAtividadeRequest;
 import com.fourcamp.NutriPlan.model.Cliente;
 import com.fourcamp.NutriPlan.service.ClienteService;
 import com.fourcamp.NutriPlan.service.ObjetivoService;
@@ -56,37 +57,6 @@ public class ClienteController {
         return clienteService.login(loginRequest.getEmail(), loginRequest.getSenha());
     }
 
-
-//    @GetMapping("/Geb")
-//    @Operation(description = "Visualizar o gasto energetico basal do cliente logado")
-//    @ApiResponses(value = {
-//            @ApiResponse (responseCode = "200", description = "Retorno do Geb"),
-//            @ApiResponse (responseCode = "400", description = "Falha no retorno do Geb")
-//    })
-//    public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token) {
-//        JwtData jwtData = JwtUtils.decodeToken(token);
-//
-//        double saldo = objetivoService.calcularTaxaMetabolica(jwtData.getEmail())
-//
-//        return ResponseEntity.ok(saldo);
-//    }
-
-    @GetMapping("/tmb")
-    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorno do TMB"),
-            @ApiResponse(responseCode = "400", description = "Falha no retorno do TMB")
-    })
-    public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token) {
-        try {
-            JwtData jwtData = JwtUtils.decodeToken(token);
-            double tmb = objetivoService.calcularETMSalvar(jwtData);
-            return ResponseEntity.ok(tmb);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
     @PostMapping("/atualizar-peso")
     public ResponseEntity<String> alterarPeso(@RequestHeader("Authorization") String token, @RequestBody PesoDto novoPeso){
         JwtData jwtData = JwtUtils.decodeToken(token);
@@ -103,4 +73,33 @@ public class ClienteController {
         return ResponseEntity.ok(mensagem);
     }
 
+//    @GetMapping("/tmb")
+//    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Retorno do TMB"),
+//            @ApiResponse(responseCode = "400", description = "Falha no retorno do TMB")
+//    })
+//    public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token) {
+//        try {
+//            JwtData jwtData = JwtUtils.decodeToken(token);
+//            double tmb = objetivoService.calcularETMSalvar(jwtData);
+//            return ResponseEntity.ok(tmb);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//    }
+
+    @PostMapping("/Geb")
+    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorno do GET"),
+            @ApiResponse(responseCode = "400", description = "Falha no retorno do GET")
+    })
+    public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token, @RequestBody CategoriaAtividadeRequest request) {
+        JwtData jwtData = JwtUtils.decodeToken(token);
+
+        double get = objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade());
+
+        return ResponseEntity.ok(get);
+    }
 }

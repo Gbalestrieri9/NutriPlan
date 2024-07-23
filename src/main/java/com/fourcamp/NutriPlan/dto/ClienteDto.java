@@ -18,4 +18,5 @@ public class ClienteDto {
     private String senha;
     private String categoria;
     private String tempoMeta;
+
 }
