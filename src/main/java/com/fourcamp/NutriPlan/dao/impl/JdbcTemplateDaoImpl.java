@@ -2,6 +2,7 @@ package com.fourcamp.NutriPlan.dao.impl;
 
 import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
 import com.fourcamp.NutriPlan.dto.ClienteDto;
+import com.fourcamp.NutriPlan.model.Alimento;
 import com.fourcamp.NutriPlan.model.Cliente;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +72,13 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         int[] types = {Types.DOUBLE, Types.DOUBLE, Types.DOUBLE, Types.DOUBLE, Types.DOUBLE, Types.VARCHAR};
 
         jdbcTemplate.update(sql, params, types);
+    }
+
+    public List<Alimento> listarAlimentos() {
+        return jdbcTemplate.query("SELECT * FROM listar_alimentos()", (rs, rowNum) -> {
+            Alimento alimento = new Alimento(rs.getDouble("kcal"), rs.getDouble("carboidrato"), rs.getDouble("proteina"),
+                    rs.getDouble("gordura"), rs.getDouble("quantidade"), rs.getString("nome"));
+            return alimento;
+        });
     }
 }
