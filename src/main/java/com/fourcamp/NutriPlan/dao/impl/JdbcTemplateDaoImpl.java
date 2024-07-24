@@ -64,4 +64,12 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         Integer clienteId = (Integer) cliente.get("id");
         jdbcTemplate.update(sql, clienteId, tmb, get);
     }
+
+    public void criarAlimento(Double kcal, Double carboidrato, Double proteina, Double gordura, Double quantidade, String nome) {
+        String sql = "CALL criar_alimento(?, ?, ?, ?, ?, ?)";
+        Object[] params = {kcal,carboidrato,proteina,gordura,quantidade,nome};
+        int[] types = {Types.DOUBLE, Types.DOUBLE, Types.DOUBLE, Types.DOUBLE, Types.DOUBLE, Types.VARCHAR};
+
+        jdbcTemplate.update(sql, params, types);
+    }
 }
