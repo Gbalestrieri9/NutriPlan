@@ -60,7 +60,7 @@ public class ObjetivoService {
 
         return get;
     }
-    
+
     private double calcularTaxaMetabolica(JwtData cliente) {
         double calculo = 0;
 
@@ -108,13 +108,42 @@ public class ObjetivoService {
         return tmb * fatorAtividade;
     }
 
-//    public String acessarPlano(JwtData jwtData, MacrosDto macros , CategoriaAtividadeRequest categoriaAtividade) {
-//        Double gastoEnergetico = calcularGETSalvar(jwtData, String.valueOf(categoriaAtividade));
-//        double caloriasNecessarias = macros.getKcalTotais();
-//        double proteinas = macros.getProteina();
-//        double carboidratos = macros.getCarboidrato();
-//        double gorduras = macros.getGordura();
+//    public String acessarPlano(JwtData jwtData, MacrosDto macros) {
+//        double gastoEnergetico = calcularGETSalvar(jwtData);
 //
+//        String categoria = jwtData.getCategoria().trim().toUpperCase(Locale.ROOT);
+//        String tempoCategoria = jwtData.getTempoMeta().trim().toUpperCase(Locale.ROOT);
+//
+//        double caloriasNecessarias = gastoEnergetico;
+//        double proteinas = 0;
+//        double carboidratos = 0;
+//        double gorduras = jwtData.getPeso();
+//
+//        switch (categoria) {
+//            case "PERDER PESO":
+//                switch (tempoCategoria) {
+//                    case "RAPIDO":
+//                        proteinas = 2.5 * jwtData.getPeso();
+//                        break;
+//                    case "MEDIO":
+//                        proteinas = 2.2 * jwtData.getPeso();
+//                        break;
+//                    case "LONGO PRAZO":
+//                        proteinas = 2.0 * jwtData.getPeso();
+//                        break;
+//                    default:
+//                        throw new UnsupportedOperationException("Tempo de meta desconhecido: " + tempoCategoria);
+//                }
+//                break;
+//            case "MANUTENCAO":
+//            case "HIPERTROFIA":
+//                proteinas = calcularProteina(jwtData);
+//                break;
+//            default:
+//                throw new UnsupportedOperationException("Categoria de atividade desconhecida: " + categoria);
+//        }
+//
+//        carboidratos = calcularCarboidratos(gastoEnergetico, proteinas, gorduras);
 //
 //        String planoNutricional = "Seu plano nutricional: \n" +
 //                "Calorias necessárias: " + caloriasNecessarias + " kcal\n" +
@@ -124,4 +153,15 @@ public class ObjetivoService {
 //
 //        return planoNutricional;
 //    }
+//
+//    private double calcularProteina(JwtData cliente) {
+//        return 2.0 * cliente.getPeso();
+//    }
+//
+//    private double calcularCarboidratos(double gastoEnergetico, double proteinas, double gorduras) {
+//        double proteinasEmCalorias = proteinas * 4;
+//        double gordurasEmCalorias = gorduras * 9;
+//        return (gastoEnergetico - proteinasEmCalorias - gordurasEmCalorias) / 4;
+//    }
+
 }
