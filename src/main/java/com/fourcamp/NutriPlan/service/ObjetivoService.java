@@ -2,6 +2,8 @@ package com.fourcamp.NutriPlan.service;
 
 import com.fourcamp.NutriPlan.dao.impl.JdbcTemplateDaoImpl;
 import com.fourcamp.NutriPlan.dto.JwtData;
+import com.fourcamp.NutriPlan.dto.MacrosDto;
+import com.fourcamp.NutriPlan.model.CategoriaAtividadeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 @Service
@@ -17,15 +20,47 @@ public class ObjetivoService {
     @Autowired
     private JdbcTemplateDaoImpl jdbcTemplateDao;
 
-    public double calcularGETSalvar(JwtData cliente, String categoriaAtividade) {
-        double tmb = calcularTaxaMetabolica(cliente);
+    public double calcularGETSalvar(JwtData jwtData, String categoriaAtividade) {
+        double tmb = calcularTaxaMetabolica(jwtData);
         double get = calcularGET(tmb, categoriaAtividade);
+        String categoria = jwtData.getCategoria().trim().toUpperCase(Locale.ROOT);
+        String tempoCategoria = jwtData.getTempoMeta().trim().toUpperCase(Locale.ROOT);
 
-        jdbcTemplateDao.salvarTMBGET(cliente.getEmail(), tmb, get);
+        switch (categoria) {
+            case "PERDER PESO":
+                if ("RAPIDO".equals(tempoCategoria)) {
+                    get -= 1000;
+                    jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                } else if ("MEDIO".equals(tempoCategoria)) {
+                    get -= 600;
+                    jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                } else if ("LONGO PRAZO".equals(tempoCategoria)) {
+                    get -= 400;
+                    jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                }
+                break;
+            case "MANUTENCAO":
+                jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                break;
+            case "HIPERTROFIA":
+                if ("RAPIDO".equals(tempoCategoria)) {
+                    get += 800;
+                    jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                } else if ("MEDIO".equals(tempoCategoria)) {
+                    get += 500;
+                    jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                } else if ("LONGO PRAZO".equals(tempoCategoria)) {
+                    get += 300;
+                    jdbcTemplateDao.salvarTMBGET(jwtData.getEmail(), tmb, get);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Categoria de atividade desconhecida: " + categoria);
+        }
 
         return get;
     }
-
+    
     private double calcularTaxaMetabolica(JwtData cliente) {
         double calculo = 0;
 
@@ -35,7 +70,7 @@ public class ObjetivoService {
         if (Objects.equals(cliente.getGenero(), "M")) {
             calculo = 66.5 + (13.75 * cliente.getPeso()) + (5.003 * (cliente.getAltura() * 100)) - (6.75 * idade);
         } else if (Objects.equals(cliente.getGenero(), "F")) {
-            calculo = 655.1 + (9.563 * cliente.getPeso()) + (1.850 * cliente.getAltura()) - (4.676 * idade);
+            calculo = 655.1 + (9.563 * cliente.getPeso()) + (1.850 * (cliente.getAltura() * 100)) - (4.676 * idade);
         }
 
         return calculo;
@@ -72,4 +107,21 @@ public class ObjetivoService {
 
         return tmb * fatorAtividade;
     }
+
+//    public String acessarPlano(JwtData jwtData, MacrosDto macros , CategoriaAtividadeRequest categoriaAtividade) {
+//        Double gastoEnergetico = calcularGETSalvar(jwtData, String.valueOf(categoriaAtividade));
+//        double caloriasNecessarias = macros.getKcalTotais();
+//        double proteinas = macros.getProteina();
+//        double carboidratos = macros.getCarboidrato();
+//        double gorduras = macros.getGordura();
+//
+//
+//        String planoNutricional = "Seu plano nutricional: \n" +
+//                "Calorias necessárias: " + caloriasNecessarias + " kcal\n" +
+//                "Proteínas: " + proteinas + " g\n" +
+//                "Carboidratos: " + carboidratos + " g\n" +
+//                "Gorduras: " + gorduras + " g";
+//
+//        return planoNutricional;
+//    }
 }

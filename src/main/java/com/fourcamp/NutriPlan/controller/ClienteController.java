@@ -98,8 +98,23 @@ public class ClienteController {
     public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token, @RequestBody CategoriaAtividadeRequest request) {
         JwtData jwtData = JwtUtils.decodeToken(token);
 
-        double get = objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade());
+       // double get = objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade());
 
-        return ResponseEntity.ok(get);
+        return ResponseEntity.ok(objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade()));
     }
+
+
+//    @GetMapping("acessar-plano")
+//    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Retorno do GET"),
+//            @ApiResponse(responseCode = "400", description = "Falha no retorno do GET")
+//    })
+//    public ResponseEntity<String> acessarPlano(@RequestHeader("Authorization") String token) {
+//        JwtData jwtData = JwtUtils.decodeToken(token);
+//
+//        String mensagem = objetivoService.acessarPlano(jwtData);
+//
+//        return ResponseEntity.ok(mensagem);
+//    }
 }
