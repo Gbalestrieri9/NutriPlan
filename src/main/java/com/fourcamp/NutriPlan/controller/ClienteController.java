@@ -87,17 +87,18 @@ public class ClienteController {
         return ResponseEntity.ok(objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade()));
     }
 
-//    @GetMapping("acessar-plano")
-//    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Retorno do GET"),
-//            @ApiResponse(responseCode = "400", description = "Falha no retorno do GET")
-//    })
-//    public ResponseEntity<String> acessarPlano(@RequestHeader("Authorization") String token) {
-//        JwtData jwtData = JwtUtils.decodeToken(token);
-//
-//        String mensagem = objetivoService.acessarPlano(jwtData);
-//
-//        return ResponseEntity.ok(mensagem);
-//    }
+    @GetMapping("acessar-plano")
+    @Operation(description = "Visualizar o gasto energético basal do cliente logado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorno do GET"),
+            @ApiResponse(responseCode = "400", description = "Falha no retorno do GET")
+    })
+    public ResponseEntity<String> acessarPlano(@RequestHeader("Authorization") String token,
+                                               @RequestParam("categoriaAtividade") String categoriaAtividade) {
+        JwtData jwtData = JwtUtils.decodeToken(token);
+
+        String mensagem = objetivoService.acessarPlano(jwtData, categoriaAtividade);
+
+        return ResponseEntity.ok(mensagem);
+    }
 }
