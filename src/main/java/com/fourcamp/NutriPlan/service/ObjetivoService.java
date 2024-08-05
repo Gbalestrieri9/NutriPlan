@@ -1,15 +1,12 @@
 package com.fourcamp.NutriPlan.service;
 
-import com.fourcamp.NutriPlan.dao.impl.JdbcTemplateDaoImpl;
+import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
 import com.fourcamp.NutriPlan.dto.JwtData;
-import com.fourcamp.NutriPlan.dto.MacrosDto;
-import com.fourcamp.NutriPlan.model.CategoriaAtividadeRequest;
+import com.fourcamp.NutriPlan.utils.CalculoIdade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -18,7 +15,10 @@ import java.util.Objects;
 public class ObjetivoService {
 
     @Autowired
-    private JdbcTemplateDaoImpl jdbcTemplateDao;
+    private JdbcTemplateDao jdbcTemplateDao;
+
+    @Autowired
+    private CalculoIdade calculoIdade;
 
     public double calcularGETSalvar(JwtData jwtData, String categoriaAtividade) {
         double tmb = calcularTaxaMetabolica(jwtData);
@@ -64,8 +64,8 @@ public class ObjetivoService {
     private double calcularTaxaMetabolica(JwtData cliente) {
         double calculo = 0;
 
-        LocalDate dataNascimento = convertToLocalDate(cliente.getDataNascimento());
-        int idade = calcularIdade(dataNascimento);
+        LocalDate dataNascimento = calculoIdade.convertToLocalDate(cliente.getDataNascimento());
+        int idade = calculoIdade.calcularIdade(dataNascimento);
 
         if (Objects.equals(cliente.getGenero(), "M")) {
             calculo = 66.5 + (13.75 * cliente.getPeso()) + (5.003 * (cliente.getAltura() * 100)) - (6.75 * idade);
@@ -74,15 +74,6 @@ public class ObjetivoService {
         }
 
         return calculo;
-    }
-
-    private LocalDate convertToLocalDate(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
-    private int calcularIdade(LocalDate dataNascimento) {
-        LocalDate hoje = LocalDate.now();
-        return Period.between(dataNascimento, hoje).getYears();
     }
 
     private double calcularGET(double tmb, String categoriaAtividade) {
@@ -151,6 +142,7 @@ public class ObjetivoService {
                 "Carboidratos: " + carboidratos + " g\n" +
                 "Gorduras: " + gorduras + " g";
 
+        jdbcTemplateDao.salvarDiario(jwtData.getEmail(), "Plano Nutricional", 1, caloriasNecessarias, carboidratos, proteinas, gorduras, new Date());
         return planoNutricional;
     }
 

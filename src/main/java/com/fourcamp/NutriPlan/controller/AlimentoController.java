@@ -22,6 +22,12 @@ public class AlimentoController {
     private AlimentoService alimentoService;
 
     @PostMapping("/criar-alimento")
+    @Operation(description = "Criar alimentos no banco")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Criação do alimento com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Falha na criação do alimento, dados inválidos ou formato incorreto"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     public ResponseEntity<String> criarAlimento(@RequestBody AlimentoDto alimento) {
         String mensagem = alimentoService.criarAlimento(alimento.getKcal(), alimento.getCarboidrato(), alimento.getProteina(), alimento.getGordura(), alimento.getQuantidade(), alimento.getNome());
 
@@ -32,7 +38,8 @@ public class AlimentoController {
     @Operation(description = "Lista todos os alimentos do banco")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retorna todos os alimentos"),
-            @ApiResponse (responseCode = "400", description = "Falha no retorno dos alimentos")
+            @ApiResponse(responseCode = "400", description = "Falha no retorno dos alimentos, dados inválidos ou formato incorreto"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public List<Alimento> mostrarAlimentos() {
         return alimentoService.visualizarAlimentos();

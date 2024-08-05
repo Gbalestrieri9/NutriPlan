@@ -1,19 +1,21 @@
 package com.fourcamp.NutriPlan.dao.impl;
 
 import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
-import com.fourcamp.NutriPlan.dto.ClienteDto;
+import com.fourcamp.NutriPlan.dto.MacrosDto;
 import com.fourcamp.NutriPlan.model.Alimento;
 import com.fourcamp.NutriPlan.model.Cliente;
-import org.slf4j.LoggerFactory;
+import com.fourcamp.NutriPlan.model.Diario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Service
 public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
@@ -81,4 +83,72 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
             return alimento;
         });
     }
+
+    public Alimento buscarAlimentoPorNome(String nome) {
+        String sql = "SELECT * FROM alimento WHERE nome = ?";
+        List<Alimento> alimentos = jdbcTemplate.query(sql, new Object[]{nome}, new RowMapper<Alimento>() {
+            @Override
+            public Alimento mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Alimento(
+                        rs.getDouble("kcal"),
+                        rs.getDouble("carboidrato"),
+                        rs.getDouble("proteina"),
+                        rs.getDouble("gordura"),
+                        rs.getDouble("quantidade"),
+                        rs.getString("nome")
+                );
+            }
+        });
+
+        if (alimentos.isEmpty()) {
+            throw new IllegalArgumentException("Alimento não encontrado: " + nome);
+        }
+
+        return alimentos.get(0);
+    }
+
+    public void salvarDiario(String email, String alimento, double quantidade, double kcal, double carboidrato, double proteina, double gordura, Date data) {
+        String sql = "INSERT INTO diario (email, alimento, quantidade, kcal, carboidrato, proteina, gordura, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, email, alimento, quantidade, kcal, carboidrato, proteina, gordura, data);
+    }
+
+
+//    public List<Diario> buscarPlanoCliente(String email) {
+//        String sql = "SELECT * FROM diario WHERE email = ?";
+//        return jdbcTemplate.query(sql, new Object[]{email}, (rs, rowNum) -> {
+//            Diario diario = new Diario();
+//            diario.setAlimento(rs.getString("alimento"));
+//            diario.setQuantidade(rs.getDouble("quantidade"));
+//            diario.setKcal(rs.getDouble("kcal"));
+//            diario.setCarboidrato(rs.getDouble("carboidrato"));
+//            diario.setProteina(rs.getDouble("proteina"));
+//            diario.setGordura(rs.getDouble("gordura"));
+//            diario.setData(rs.getDate("data"));
+//            return diario;
+//        });
+//    }
+
+    public List<Diario> buscarPlanoCliente(String email) {
+        String sql = "SELECT * FROM diario WHERE email = ? AND data = ? ORDER BY data DESC";
+        Date currentDate = new Date(System.currentTimeMillis()); // Data atual
+        return jdbcTemplate.query(sql, new Object[]{email, new java.sql.Date(currentDate.getTime())}, (rs, rowNum) -> {
+            Diario diario = new Diario();
+            diario.setAlimento(rs.getString("alimento"));
+            diario.setQuantidade(rs.getDouble("quantidade"));
+            diario.setKcal(rs.getDouble("kcal"));
+            diario.setCarboidrato(rs.getDouble("carboidrato"));
+            diario.setProteina(rs.getDouble("proteina"));
+            diario.setGordura(rs.getDouble("gordura"));
+            diario.setData(rs.getDate("data"));
+            return diario;
+        });
+    }
+
+    public void atualizarPlanoCliente(String email, MacrosDto planoAtualizado) {
+        // Salvar o plano atualizado no banco de dados
+        String sql = "UPDATE diario SET kcal = ?, carboidrato = ?, proteina = ?, gordura = ? WHERE email = ?";
+        jdbcTemplate.update(sql, planoAtualizado.getKcalTotais(), planoAtualizado.getCarboidrato(),
+                planoAtualizado.getProteina(), planoAtualizado.getGordura(), email);
+    }
+
 }
