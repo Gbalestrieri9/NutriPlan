@@ -112,25 +112,9 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
         jdbcTemplate.update(sql, email, alimento, quantidade, kcal, carboidrato, proteina, gordura, data);
     }
 
-
-//    public List<Diario> buscarPlanoCliente(String email) {
-//        String sql = "SELECT * FROM diario WHERE email = ?";
-//        return jdbcTemplate.query(sql, new Object[]{email}, (rs, rowNum) -> {
-//            Diario diario = new Diario();
-//            diario.setAlimento(rs.getString("alimento"));
-//            diario.setQuantidade(rs.getDouble("quantidade"));
-//            diario.setKcal(rs.getDouble("kcal"));
-//            diario.setCarboidrato(rs.getDouble("carboidrato"));
-//            diario.setProteina(rs.getDouble("proteina"));
-//            diario.setGordura(rs.getDouble("gordura"));
-//            diario.setData(rs.getDate("data"));
-//            return diario;
-//        });
-//    }
-
     public List<Diario> buscarPlanoCliente(String email) {
         String sql = "SELECT * FROM diario WHERE email = ? AND data = ? ORDER BY data DESC";
-        Date currentDate = new Date(System.currentTimeMillis()); // Data atual
+        Date currentDate = new Date(System.currentTimeMillis());
         return jdbcTemplate.query(sql, new Object[]{email, new java.sql.Date(currentDate.getTime())}, (rs, rowNum) -> {
             Diario diario = new Diario();
             diario.setAlimento(rs.getString("alimento"));
@@ -143,12 +127,4 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
             return diario;
         });
     }
-
-    public void atualizarPlanoCliente(String email, MacrosDto planoAtualizado) {
-        // Salvar o plano atualizado no banco de dados
-        String sql = "UPDATE diario SET kcal = ?, carboidrato = ?, proteina = ?, gordura = ? WHERE email = ?";
-        jdbcTemplate.update(sql, planoAtualizado.getKcalTotais(), planoAtualizado.getCarboidrato(),
-                planoAtualizado.getProteina(), planoAtualizado.getGordura(), email);
-    }
-
 }

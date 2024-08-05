@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler  extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AlimentoNotFoundException.class)
-    private ResponseEntity<RestErrorMessage> alimentoNaoExistenteHandler(AlimentoNotFoundException exception){
+    private ResponseEntity<RestErrorMessage> alimentoNaoExisteException(AlimentoNotFoundException exception){
         RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
     }
@@ -60,6 +60,12 @@ public class RestExceptionHandler  extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(TempoMetaException.class)
     private ResponseEntity<RestErrorMessage> TempoMetaException(TempoMetaException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
+    }
+
+    @ExceptionHandler(PlanoException.class)
+    private ResponseEntity<RestErrorMessage> PlanoException(PlanoException exception){
         RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }

@@ -34,5 +34,4 @@ public interface JdbcTemplateDao {
 
     List<Diario> buscarPlanoCliente(String email);
 
-    void atualizarPlanoCliente(String email, MacrosDto planoAtualizado);
 }

@@ -2,6 +2,8 @@ package com.fourcamp.NutriPlan.service;
 
 import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
 import com.fourcamp.NutriPlan.dto.JwtData;
+import com.fourcamp.NutriPlan.exception.CategoriaException;
+import com.fourcamp.NutriPlan.exception.TempoMetaException;
 import com.fourcamp.NutriPlan.utils.CalculoIdade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +57,7 @@ public class ObjetivoService {
                 }
                 break;
             default:
-                throw new UnsupportedOperationException("Categoria de atividade desconhecida: " + categoria);
+                throw new CategoriaException();
         }
 
         return get;
@@ -123,7 +125,7 @@ public class ObjetivoService {
                         proteinas = 2.0 * jwtData.getPeso();
                         break;
                     default:
-                        throw new UnsupportedOperationException("Tempo de meta desconhecido: " + tempoCategoria);
+                        throw new TempoMetaException();
                 }
                 break;
             case "MANUTENCAO":
@@ -131,7 +133,7 @@ public class ObjetivoService {
                 proteinas = calcularProteina(jwtData);
                 break;
             default:
-                throw new UnsupportedOperationException("Categoria de atividade desconhecida: " + categoria);
+                throw new CategoriaException();
         }
 
         carboidratos = calcularCarboidratos(gastoEnergetico, proteinas, gorduras);

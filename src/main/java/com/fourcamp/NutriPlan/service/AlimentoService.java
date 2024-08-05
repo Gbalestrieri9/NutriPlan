@@ -2,6 +2,7 @@ package com.fourcamp.NutriPlan.service;
 
 import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
 import com.fourcamp.NutriPlan.dao.impl.JdbcTemplateDaoImpl;
+import com.fourcamp.NutriPlan.exception.AlimentoNotFoundException;
 import com.fourcamp.NutriPlan.model.Alimento;
 import com.fourcamp.NutriPlan.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class AlimentoService {
     }
 
     public List<Alimento> visualizarAlimentos() {
-        return jdbcTemplateDao.listarAlimentos();
+        try {
+            return jdbcTemplateDao.listarAlimentos();
+        }catch (Exception e){
+            throw new AlimentoNotFoundException();
+        }
+
     }
 }

@@ -14,4 +14,6 @@ public class Constantes {
     public static final String MSG_FORMATO_INVALIDO = "O campo 'novoPeso' deve ser um número válido.";
     public static final String MSG_CATEGORIA_INVALIDO = "Categoria inválida. Valores permitidos: PERDER PESO\", \"MANUTENCAO\", \"HIPERTROFIA ";
     public static final String MSG_TEMPO_META_INVALIDO = "Tempo de meta inválido. Valores permitidos: RAPIDO\", \"MEDIO\", \"LONGO PRAZO ";
+    public static final String MSG_ATUALIZACAO_PLANO = "Diario adicionado. Plano nutricional atualizado.";
+    public static final String MSG_PLANO_DATA = "Refaça novamente o 'visualizar plano' para atualizar.";
 }

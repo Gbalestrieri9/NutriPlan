@@ -5,11 +5,15 @@ import com.fourcamp.NutriPlan.dao.impl.JdbcTemplateDaoImpl;
 import com.fourcamp.NutriPlan.dto.JwtData;
 import com.fourcamp.NutriPlan.dto.MacrosDto;
 import com.fourcamp.NutriPlan.dto.RefeicaoRequest;
+import com.fourcamp.NutriPlan.exception.PlanoException;
 import com.fourcamp.NutriPlan.model.Alimento;
 import com.fourcamp.NutriPlan.model.Diario;
+import com.fourcamp.NutriPlan.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -34,9 +38,18 @@ public class DiarioService {
 
         MacrosDto planoAposAdicao = consultarPlanoCliente(jwtData, planoAtual);
 
-        jdbcTemplateDao.atualizarPlanoCliente(jwtData.getEmail(), planoAposAdicao);
+        jdbcTemplateDao.salvarDiario(
+                jwtData.getEmail(),
+                refeicaoRequest.getAlimento(),
+                refeicaoRequest.getQuantidade(),
+                roundToThreeDecimalPlaces(planoAposAdicao.getKcalTotais()),
+                roundToThreeDecimalPlaces(planoAposAdicao.getCarboidrato()),
+                roundToThreeDecimalPlaces(planoAposAdicao.getProteina()),
+                roundToThreeDecimalPlaces(planoAposAdicao.getGordura()),
+                new Date()
+        );
 
-        return "Diario adicionado. Plano nutricional atualizado.";
+        return Constantes.MSG_ATUALIZACAO_PLANO;
     }
 
     public MacrosDto consultarTabelaNutricional(String nomeAlimento) {
@@ -67,8 +80,16 @@ public class DiarioService {
             planoAtual.setCarboidrato(diario.getCarboidrato() - planoAtual.getCarboidrato());
             planoAtual.setProteina(diario.getProteina() - planoAtual.getProteina());
             planoAtual.setGordura(diario.getGordura() - planoAtual.getGordura());
+        }else {
+            throw new PlanoException();
         }
 
         return planoAtual;
+    }
+
+    private double roundToThreeDecimalPlaces(double value) {
+        BigDecimal bigDecimal = BigDecimal.valueOf(value);
+        bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
     }
 }
