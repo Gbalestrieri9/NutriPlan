@@ -4,6 +4,7 @@ import com.fourcamp.NutriPlan.dao.JdbcTemplateDao;
 import com.fourcamp.NutriPlan.dto.JwtData;
 import com.fourcamp.NutriPlan.exception.CategoriaException;
 import com.fourcamp.NutriPlan.exception.TempoMetaException;
+import com.fourcamp.NutriPlan.utils.Arredondamento;
 import com.fourcamp.NutriPlan.utils.CalculoIdade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -144,7 +145,15 @@ public class ObjetivoService {
                 "Carboidratos: " + carboidratos + " g\n" +
                 "Gorduras: " + gorduras + " g";
 
-        jdbcTemplateDao.salvarDiario(jwtData.getEmail(), "Plano Nutricional", 1, caloriasNecessarias, carboidratos, proteinas, gorduras, new Date());
+        jdbcTemplateDao.salvarDiario(
+                jwtData.getEmail(),
+                "Plano Nutricional",
+                1,
+                Arredondamento.roundToThreeDecimalPlaces(caloriasNecessarias),
+                Arredondamento.roundToThreeDecimalPlaces(carboidratos),
+                Arredondamento.roundToThreeDecimalPlaces(proteinas) ,
+                Arredondamento.roundToThreeDecimalPlaces(gorduras),
+                new Date());
         return planoNutricional;
     }
 

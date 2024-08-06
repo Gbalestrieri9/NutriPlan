@@ -5,9 +5,11 @@ import com.fourcamp.NutriPlan.dao.impl.JdbcTemplateDaoImpl;
 import com.fourcamp.NutriPlan.dto.JwtData;
 import com.fourcamp.NutriPlan.dto.MacrosDto;
 import com.fourcamp.NutriPlan.dto.RefeicaoRequest;
+import com.fourcamp.NutriPlan.exception.AlimentoNotFoundException;
 import com.fourcamp.NutriPlan.exception.PlanoException;
 import com.fourcamp.NutriPlan.model.Alimento;
 import com.fourcamp.NutriPlan.model.Diario;
+import com.fourcamp.NutriPlan.utils.Arredondamento;
 import com.fourcamp.NutriPlan.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,29 +40,29 @@ public class DiarioService {
 
         MacrosDto planoAposAdicao = consultarPlanoCliente(jwtData, planoAtual);
 
-        jdbcTemplateDao.salvarDiario(
+         jdbcTemplateDao.salvarDiario(
                 jwtData.getEmail(),
                 refeicaoRequest.getAlimento(),
                 refeicaoRequest.getQuantidade(),
-                roundToThreeDecimalPlaces(planoAposAdicao.getKcalTotais()),
-                roundToThreeDecimalPlaces(planoAposAdicao.getCarboidrato()),
-                roundToThreeDecimalPlaces(planoAposAdicao.getProteina()),
-                roundToThreeDecimalPlaces(planoAposAdicao.getGordura()),
+                Arredondamento.roundToThreeDecimalPlaces(planoAposAdicao.getKcalTotais()),
+                Arredondamento.roundToThreeDecimalPlaces(planoAposAdicao.getCarboidrato()),
+                Arredondamento.roundToThreeDecimalPlaces(planoAposAdicao.getProteina()),
+                Arredondamento.roundToThreeDecimalPlaces(planoAposAdicao.getGordura()),
                 new Date()
         );
 
         return Constantes.MSG_ATUALIZACAO_PLANO;
     }
 
-    public MacrosDto consultarTabelaNutricional(String nomeAlimento) {
+    public MacrosDto consultarTabelaNutricional(String nomeAlimento){
         Alimento alimento = jdbcTemplateDao.buscarAlimentoPorNome(nomeAlimento);
 
-        return new MacrosDto(
-                alimento.getKcal(),
-                alimento.getCarboidrato(),
-                alimento.getProteina(),
-                alimento.getGordura()
-        );
+            return new MacrosDto(
+                    alimento.getKcal(),
+                    alimento.getCarboidrato(),
+                    alimento.getProteina(),
+                    alimento.getGordura()
+            );
     }
 
     public MacrosDto calcularQuantidadeAlimento(MacrosDto macro, Double quantidade) {
@@ -87,9 +89,4 @@ public class DiarioService {
         return planoAtual;
     }
 
-    private double roundToThreeDecimalPlaces(double value) {
-        BigDecimal bigDecimal = BigDecimal.valueOf(value);
-        bigDecimal = bigDecimal.setScale(3, RoundingMode.HALF_UP);
-        return bigDecimal.doubleValue();
-    }
 }

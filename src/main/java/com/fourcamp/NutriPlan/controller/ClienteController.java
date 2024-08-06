@@ -104,8 +104,6 @@ public class ClienteController {
     public ResponseEntity<Double> visualizarTMB(@RequestHeader("Authorization") String token, @RequestBody CategoriaAtividadeRequestDto request) {
         JwtData jwtData = JwtUtils.decodeToken(token);
 
-        // double get = objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade());
-
         return ResponseEntity.ok(objetivoService.calcularGETSalvar(jwtData, request.getCategoriaAtividade()));
     }
 

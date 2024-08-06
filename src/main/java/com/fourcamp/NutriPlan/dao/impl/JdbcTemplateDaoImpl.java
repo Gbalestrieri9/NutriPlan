@@ -6,10 +6,12 @@ import com.fourcamp.NutriPlan.model.Alimento;
 import com.fourcamp.NutriPlan.model.Cliente;
 import com.fourcamp.NutriPlan.model.Diario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;

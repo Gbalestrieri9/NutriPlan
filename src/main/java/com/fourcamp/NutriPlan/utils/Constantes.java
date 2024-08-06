@@ -16,4 +16,5 @@ public class Constantes {
     public static final String MSG_TEMPO_META_INVALIDO = "Tempo de meta inválido. Valores permitidos: RAPIDO\", \"MEDIO\", \"LONGO PRAZO ";
     public static final String MSG_ATUALIZACAO_PLANO = "Diario adicionado. Plano nutricional atualizado.";
     public static final String MSG_PLANO_DATA = "Refaça novamente o 'visualizar plano' para atualizar.";
+    public static final String MSG_ALIMENTO_NAO_ENCONTRADO = "Alimento não existe no nosso banco de dados";
 }

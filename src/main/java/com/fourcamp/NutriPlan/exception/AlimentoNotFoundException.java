@@ -1,9 +1,11 @@
 package com.fourcamp.NutriPlan.exception;
 
+import com.fourcamp.NutriPlan.utils.Constantes;
+
 public class AlimentoNotFoundException extends RuntimeException{
 
     public AlimentoNotFoundException(){
-        super("Alimento não existe no nosso banco de dados");
+        super(Constantes.MSG_ALIMENTO_NAO_ENCONTRADO);
     }
 
     public AlimentoNotFoundException(String message){
