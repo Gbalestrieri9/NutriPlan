@@ -68,6 +68,13 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.alimento
     OWNER to postgres;
 
+INSERT INTO alimentos (id, kcal, carboidrato, proteina, gordura, quantidade, nome) VALUES
+(1, 130, 28, 0, 3, 100, 'Arroz Integral'),
+(2, 159, 0, 32, 2, 100, 'Peito de frango'),
+(3, 92, 24, 1, 0, 100, 'Banana nanica'),
+(4, 76.5, 13, 5, 0.5, 100, 'Feijao'),
+(5, 347, 56.7, 14.3, 7.3, 100, 'Aveia');
+
 
 -- Table: public.diario
 
